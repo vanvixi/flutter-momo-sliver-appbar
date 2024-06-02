@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -78,7 +79,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => kToolbarHeight + safeAreaTop;
 
   @override
-  double get maxExtent => 200;
+  double get maxExtent => Platform.isAndroid ? 200 : 230;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
@@ -127,7 +128,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         ));
 
         // Box
-        const boxPaddingBottom = 16.0;
+        final boxPaddingBottom = Platform.isAndroid ? 16.0 : 12.0;
         const actionFloatTextStyle = TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.w600,
@@ -143,7 +144,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
               height: deltaExtent,
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.symmetric(horizontal: transform(16, 0, t, 2)),
-              padding: const EdgeInsets.only(bottom: boxPaddingBottom),
+              padding: EdgeInsets.only(bottom: boxPaddingBottom),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(transform(8, 0, t, 2)),
