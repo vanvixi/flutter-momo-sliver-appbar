@@ -110,11 +110,6 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
         final List<Widget> children = <Widget>[];
 
-        // background
-        final double fadeStart = max(0, 1.0 - kToolbarHeight / deltaExtent);
-        const double fadeEnd = 1;
-        assert(fadeStart <= fadeEnd, 'fadeStart > fadeEnd is not true');
-
         double height = maxExtent;
 
         // Background image
