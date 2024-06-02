@@ -175,3 +175,4 @@ android/fastlane/report.xml
 !.idea/codeStyles/
 !.idea/dictionaries/
 !.idea/runConfigurations/
+!.fvm/fvm_config.json
