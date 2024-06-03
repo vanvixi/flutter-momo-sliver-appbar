@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_momo_ui/notification_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,50 +40,82 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late double minExtent;
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    minExtent = kToolbarHeight + MediaQuery.paddingOf(context).top;
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SliverAppBarDelegate(MediaQuery.paddingOf(context).top),
-          ),
-          SliverList.list(
-            children: List<Widget>.generate(
-              20,
-              (int index) => Card(
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 24,
-                    horizontal: 16,
-                  ),
-                  child: Text(index.toString()),
-                ),
+      body: AppBarScrollHandler(
+        minExtent: minExtent,
+        controller: scrollController,
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: SliverAppBarDelegate(
+                minExtent: minExtent,
+                maxExtent: Platform.isAndroid ? 200 : 230,
               ),
             ),
-          )
-        ],
+            SliverList.list(
+              children: List<Widget>.generate(
+                20,
+                (int index) => Card(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 24,
+                      horizontal: 16,
+                    ),
+                    child: Text(index.toString()),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  const SliverAppBarDelegate(this.safeAreaTop);
-
-  final double safeAreaTop;
-
-  @override
-  double get minExtent => kToolbarHeight + safeAreaTop;
+  const SliverAppBarDelegate({
+    required this.minExtent,
+    required this.maxExtent,
+  });
 
   @override
-  double get maxExtent => Platform.isAndroid ? 200 : 230;
+  final double minExtent;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
+  final double maxExtent;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return minExtent != oldDelegate.minExtent || maxExtent != oldDelegate.maxExtent;
+  }
 
   @override
   OverScrollHeaderStretchConfiguration? get stretchConfiguration => OverScrollHeaderStretchConfiguration();
@@ -107,6 +140,7 @@ class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         // 0.0 -> Expanded
         // 1.0 -> Collapsed
         double t = clampDouble(1.0 - (currentExtent - minExtent) / deltaExtent, 0, 1);
+        CollapsingNotification(t).dispatch(context);
 
         final List<Widget> children = <Widget>[];
 
