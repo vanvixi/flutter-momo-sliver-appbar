@@ -12,11 +12,13 @@ class AppBarScrollHandler extends StatefulWidget {
   const AppBarScrollHandler({
     super.key,
     required this.minExtent,
+    required this.maxExtent,
     required this.controller,
     required this.child,
   });
 
   final double minExtent;
+  final double maxExtent;
   final ScrollController controller;
   final Widget child;
 
@@ -36,11 +38,11 @@ class _AppBarScrollHandlerState extends State<AppBarScrollHandler> {
   }
 
   void animateTo(double offset) {
-    widget.controller.animateTo(offset, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+    widget.controller.animateTo(offset, duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   void reverseDirectionHandler() {
-    if (t >= 0.25) return animateTo(widget.minExtent);
+    if (t >= 0.15) return animateTo(widget.maxExtent - widget.minExtent);
 
     animateTo(0);
   }
