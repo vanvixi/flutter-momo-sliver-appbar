@@ -371,24 +371,18 @@ class FloatingBalanceBar extends StatelessWidget {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: isShowWhen
-          ? const BalanceBar(
-              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          ?  BalanceBar(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 4),
-                    blurRadius: 10,
-                    spreadRadius: -1,
-                  ),
-                  BoxShadow(
-                    color: Colors.black12,
-                    offset: Offset(0, 8),
+                    color: Colors.black.withOpacity(0.1),
+                    offset: const Offset(0, 8),
                     blurRadius: 20,
                     spreadRadius: -2,
                   ),
